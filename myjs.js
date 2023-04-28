@@ -19,17 +19,31 @@ function createForm() {
   }
 
   const change = document.querySelector(".change");
-  function changeRender(event, title, description) {
+  function changeRender(event) {
     event.preventDefault();
-    change.style.display = "block";
+
+    const myWrapper = event.target.closest(".wrapper");
+    const myIndex = Array.from(myWrapper.parentElement.children).indexOf(
+      myWrapper
+    );
     change.innerHTML = `
-      <div class="wrapper" >
-       <h2>Edit</h2>
-          <input type="text" name="title" id="title" value="${title.textContent}">
-          <input type="text" name="description" id="description" value=" ${description.textContent}">
-              <button class="saveButton">Save</button>\n
-      </div>
-    `;
+       <div class="wrapper" >
+        <h2>Edit</h2>
+           <input type="text" name="change_title" id="change_title" value="${data[myIndex].title}">
+           <input type="text" name="change_description" id="change_description" value=" ${data[myIndex].description}">
+               <button class="saveButton">Save</button>\n
+       </div>
+     `;
+    change.style.display = "block";
+
+    change.querySelector(".saveButton").addEventListener("click", (event) => {
+      const changetTitle = document.querySelector("#change_title");
+      const changetDescription = document.querySelector("#change_description");
+      data[myIndex].title = changetTitle.value;
+      data[myIndex].description = changetDescription.value;
+      render();
+      change.style.display = "none";
+    });
   }
 
   function addItem(event) {
@@ -48,21 +62,20 @@ function createForm() {
 
   toDoList.addEventListener("click", (event) => {
     const myDelBtn = event.target.closest(".deleteButton");
-    const wrapper = myDelBtn.closest(".wrapper");
-    const index = Array.from(wrapper.parentElement.children).indexOf(wrapper);
-    data.splice(index, 1);
-    // wrapper.remove();
-    render();
+    if (myDelBtn) {
+      const wrapper = myDelBtn.closest(".wrapper");
+      const index = Array.from(wrapper.parentElement.children).indexOf(wrapper);
+      data.splice(index, 1);
+      // wrapper.remove();
+      render();
+    }
   });
 
-  change.addEventListener("click", (event) => {
+  toDoList.addEventListener("click", (event) => {
     const myEditBtn = event.target.closest(".editButton");
     if (myEditBtn) {
-      const editWrapper = myEditBtn.closest(".wrapper");
-      const title = editWrapper.querySelector(".tit");
-      const description = editWrapper.querySelector(".desc");
+      changeRender(event);
     }
-    changeRender(event, title, description);
   });
 }
 createForm();
