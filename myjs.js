@@ -18,6 +18,20 @@ function createForm() {
     });
   }
 
+  const change = document.querySelector(".change");
+  function changeRender(event, title, description) {
+    event.preventDefault();
+    change.style.display = "block";
+    change.innerHTML = `
+      <div class="wrapper" >
+       <h2>Edit</h2>
+          <input type="text" name="title" id="title" value="${title.textContent}">
+          <input type="text" name="description" id="description" value=" ${description.textContent}">
+              <button class="saveButton">Save</button>\n
+      </div>
+    `;
+  }
+
   function addItem(event) {
     event.preventDefault();
     const list = {
@@ -37,8 +51,18 @@ function createForm() {
     const wrapper = myDelBtn.closest(".wrapper");
     const index = Array.from(wrapper.parentElement.children).indexOf(wrapper);
     data.splice(index, 1);
-    wrapper.remove();
-    // render(); // рендеринг не соблюдает нумерацию как на предыдущей строке
+    // wrapper.remove();
+    render();
+  });
+
+  change.addEventListener("click", (event) => {
+    const myEditBtn = event.target.closest(".editButton");
+    if (myEditBtn) {
+      const editWrapper = myEditBtn.closest(".wrapper");
+      const title = editWrapper.querySelector(".tit");
+      const description = editWrapper.querySelector(".desc");
+    }
+    changeRender(event, title, description);
   });
 }
 createForm();
